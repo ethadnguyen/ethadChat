@@ -14,14 +14,14 @@ const createSocketServer = (options) => {
   io.on('connection', async (socket) => {
     const user = socket.user;
     console.log(`${user.displayName} online with ${socket.id}`);
-
+    
+    
     onlineUsers.set(user._id, socket.id);
     io.emit('online-users', Array.from(onlineUsers.keys()));
-
+    
     const conversationIds = await ConversationRepository.findByUserId(user._id);
-
     conversationIds.forEach(conversation => {
-      socket.join(conversation._id);
+      socket.join(conversation._id.toString());
     });
 
     socket.on('disconnect', () => {
